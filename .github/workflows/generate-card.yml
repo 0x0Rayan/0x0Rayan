@@ -15,6 +15,7 @@ on:
 
     paths-ignore:
       - 'assets/profile.svg'
+      - 'assets/profile_v2.svg'
 
 permissions:
   contents: write
@@ -31,17 +32,23 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: pip install pillow requests numpy
+        run: pip install requests
       - name: Generate animated ASCII profile card
         env:
-          GITHUB_LOGIN: pangeran-droid
+          GITHUB_LOGIN: 0x0Rayan
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUT_PATH: assets/profile.svg
         run: python scripts/generate_card.py
+      - name: Generate animated ASCII profile card v2
+        env:
+          GITHUB_LOGIN: 0x0Rayan
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OUT_PATH: assets/profile_v2.svg
+        run: python scripts/generate_card_v2.py
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/profile.svg
+          git add assets/profile.svg assets/profile_v2.svg
           git diff --staged --quiet || git commit -m "chore: refresh ascii profile card"
           git push
